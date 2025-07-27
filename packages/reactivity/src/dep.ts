@@ -77,8 +77,8 @@ export class Dep {
   subs?: Link = undefined
 
   /**
-   * Doubly linked list representing the subscribing effects (head)
-   * DEV only, for invoking onTrigger hooks in correct order
+   * Doubly linked list representing（代表，表示） the subscribing effects (head)
+   * DEV only, for invoking（调用） onTrigger hooks in correct order
    */
   subsHead?: Link
 

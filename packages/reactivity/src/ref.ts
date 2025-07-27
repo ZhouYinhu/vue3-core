@@ -56,7 +56,11 @@ export function ref<T>(
   value: T,
 ): [T] extends [Ref] ? IfAny<T, Ref<T>, T> : Ref<UnwrapRef<T>, UnwrapRef<T> | T>
 export function ref<T = any>(): Ref<T | undefined>
+/**
+ * ref函数
+ */
 export function ref(value?: unknown) {
+  // debugger
   return createRef(value, false)
 }
 
@@ -91,11 +95,15 @@ export function shallowRef<T>(
     : ShallowRef<T>
   : ShallowRef<T>
 export function shallowRef<T = any>(): ShallowRef<T | undefined>
+/**
+ * 浅层ref
+ */
 export function shallowRef(value?: unknown) {
   return createRef(value, true)
 }
 
 function createRef(rawValue: unknown, shallow: boolean) {
+  /** 判断是否已经是ref，如果是，则直接返回该值 */
   if (isRef(rawValue)) {
     return rawValue
   }
@@ -111,11 +119,35 @@ class RefImpl<T = any> {
 
   dep: Dep = new Dep()
 
+  /** 设置响应式标识 */
   public readonly [ReactiveFlags.IS_REF] = true
   public readonly [ReactiveFlags.IS_SHALLOW]: boolean = false
 
   constructor(value: T, isShallow: boolean) {
+    /**
+     * `isShallow === true`，`_rawValue`为`RefImpl`的接收值
+     *
+     * `isShwllow === false`
+     * toRaw: 可以返回由`reactive()`、`readonly()`、`shallowReactive()` 或者`shallowReadonly()`创建的代理对应的原始对象
+     * 如果`value`是简单类型，则`_rawValue`保存的是`RefImpl`的接收值
+     * 如果`value`是响应式数据reactive，`toRaw()`返回其原始对象
+     */
     this._rawValue = isShallow ? value : toRaw(value)
+    /**
+     * 如果`isShallow`为true，`_value`为`RefImpl`的接收值
+     * 如果`isShallow`为false，`_value`为`toReactive`函数的返回值
+     *
+     * `toReactive`判断其接收值是否是对象
+     * 如果是对象进行`reactive`函数处理
+     * 否则返回其接收值
+     *
+     * `isShallow === true`
+     * 结论，无论`value`为何类型，`_value === value`，同时`_value === _rawValue`
+     *
+     * `isShallow === false`
+     * 结论1，如果`RefImpl`类的接收值`value`为简单类型，则`_value === value`，即原始值
+     * 结论2，如果`RefImpl`类的接收值`value`为复杂类型，则`_value`保存的值是经过`toReactive()`处理后的值，即响应式reactive
+     */
     this._value = isShallow ? value : toReactive(value)
     this[ReactiveFlags.IS_SHALLOW] = isShallow
   }
