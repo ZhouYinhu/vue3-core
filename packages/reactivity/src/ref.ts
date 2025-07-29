@@ -117,6 +117,9 @@ class RefImpl<T = any> {
   _value: T
   private _rawValue: T
 
+  /**
+   * 生成依赖实例
+   */
   dep: Dep = new Dep()
 
   /** 设置响应式标识 */
@@ -154,6 +157,9 @@ class RefImpl<T = any> {
 
   get value() {
     if (__DEV__) {
+      /**
+       * 触发依赖的收集方法
+       */
       this.dep.track({
         target: this,
         type: TrackOpTypes.GET,
