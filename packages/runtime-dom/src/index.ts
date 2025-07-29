@@ -95,6 +95,9 @@ export const hydrate = ((...args) => {
   ensureHydrationRenderer().hydrate(...args)
 }) as RootHydrateFunction
 
+/**
+ * 创建应用，并将其挂在到DOM节点
+ */
 export const createApp = ((...args) => {
   const app = ensureRenderer().createApp(...args)
 
