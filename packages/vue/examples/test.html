@@ -18,13 +18,16 @@
       const App = {
         setup() {
           const count = ref(0)
+
           const handleClick = () => {
+            const clickValue = 0
             count.value++
           }
           const reset = () => {
             count.value = 0
           }
           return {
+            /** 变量访问，触发getter，从而触发依赖收集； */
             count,
             handleClick,
             reset,
