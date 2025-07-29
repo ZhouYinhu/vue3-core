@@ -228,6 +228,11 @@ function injectCompilerOptionsCheck(app: App) {
   }
 }
 
+/**
+ *
+ * @param container 节点名称
+ * @returns DOM节点
+ */
 function normalizeContainer(
   container: Element | ShadowRoot | string,
 ): Element | ShadowRoot | null {
